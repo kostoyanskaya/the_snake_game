@@ -61,7 +61,8 @@ class Apple(GameObject):
                                           SCREEN_WIDTH - GRID_SIZE, GRID_SIZE)
             y_position = random.randrange(SCREEN_START,
                                           SCREEN_HEIGHT - GRID_SIZE, GRID_SIZE)
-            if (x_position, y_position) not in occupied_cells:
+            if occupied_cells is None or (x_position,
+                                          y_position) not in occupied_cells:
                 self.position = (x_position, y_position)
                 break
 
