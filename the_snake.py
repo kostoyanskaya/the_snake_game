@@ -57,13 +57,12 @@ class Apple(GameObject):
     def randomize_position(self, occupied_cells):
         """Задает случайную координату"""
         while True:
-            x_position = random.randrange(SCREEN_START,
-                                          SCREEN_WIDTH - GRID_SIZE, GRID_SIZE)
-            y_position = random.randrange(SCREEN_START,
-                                          SCREEN_HEIGHT - GRID_SIZE, GRID_SIZE)
-            if occupied_cells is None or (x_position,
-                                          y_position) not in occupied_cells:
-                self.position = (x_position, y_position)
+            self.position = (
+                random.randrange(SCREEN_START, SCREEN_WIDTH
+                                 - GRID_SIZE, GRID_SIZE),
+                random.randrange(SCREEN_START, SCREEN_HEIGHT
+                                 - GRID_SIZE, GRID_SIZE))
+            if occupied_cells is None or self.position not in occupied_cells:
                 break
 
     def draw(self):
@@ -76,10 +75,7 @@ class Snake(GameObject):
 
     def __init__(self, bg_color=SNAKE_COLOR):
         super().__init__(bg_color)
-        self.positions = None
-        self.length = 0
         self.last = None
-        self.direction = None
         self.next_direction = None
         self.reset()
 
@@ -105,7 +101,7 @@ class Snake(GameObject):
         self.draw_object(self.positions[0])
         if self.last:
             last_rect = pygame.Rect(
-                (self.last[0], self.last[1]),
+                self.last,
                 (GRID_SIZE, GRID_SIZE)
             )
             pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
@@ -117,7 +113,7 @@ class Snake(GameObject):
     def reset(self):
         """Сбрасывает змейку в начальное состояние."""
         self.length = 1
-        self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
+        self.positions = [self.position]
         self.direction = random.choice((UP, DOWN, LEFT, RIGHT))
 
 
@@ -156,6 +152,7 @@ def main():
         if snake.get_head_position() in snake.positions[1:]:
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
+            apple.randomize_position(snake.positions)
 
         pygame.display.update()
         clock.tick(SPEED)
